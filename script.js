@@ -1,21 +1,37 @@
 // Loading Data From Api
 
-const loadData = async (search) => {
+const loadData = async (search, limit) => {
   try {
     const res = await fetch(
       `https://openapi.programming-hero.com/api/phones?search=${search}`
     );
 
     const data = await res.json();
-    displayData(data.data);
+    displayData(data.data, limit);
   } catch (err) {
     console.error(err);
   }
 };
 
-const displayData = (phones) => {
+const displayData = (phones, limit) => {
   const phoneContainer = document.getElementById("phone-container");
+  const notFound = document.getElementById("not-found");
+  const showAll = document.getElementById("show-all");
   phoneContainer.innerHTML = "";
+
+  if (limit && phones.length > 10) {
+    showAll.classList.remove("hidden");
+    phones = phones.slice(0, 10);
+  } else {
+    showAll.classList.add("hidded");
+  }
+
+  if (phones.length === 0) {
+    notFound.classList.remove("hidden");
+  } else {
+    notFound.classList.add("hidden");
+  }
+
   phones.forEach((phone) => {
     const { phone_name, image } = phone;
     const phoneDiv = document.createElement("div");
@@ -63,11 +79,20 @@ const displayData = (phones) => {
   });
 };
 
-// Search By Mouse Click
-document.getElementById("search-btn").addEventListener("click", function () {
+const processSearch = (limit) => {
   const inputField = document.getElementById("simple-search");
   const searchText = inputField.value;
-  loadData(searchText);
+  loadData(searchText, limit);
+};
+
+// Search By Mouse Click
+document.getElementById("search-btn").addEventListener("click", function (e) {
+  e.preventDefault();
+  processSearch(10);
 });
 
-// Search By Enter Key
+// Show All Button
+
+document.getElementById("show-all").addEventListener("click", function () {
+  processSearch();
+});
