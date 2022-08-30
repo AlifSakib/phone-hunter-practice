@@ -69,6 +69,7 @@ const displayData = (phones, limit) => {
       </div>   
     `;
     phoneContainer.appendChild(phoneDiv);
+    hideBlogs();
   });
 
   toggleSpinner();
@@ -83,7 +84,6 @@ const processSearch = (limit) => {
 
 // Search By Mouse Click
 document.getElementById("search-btn").addEventListener("click", function (e) {
-  hideBlogs();
   e.preventDefault();
   processSearch(10);
   const showAll = document.getElementById("show-all");
